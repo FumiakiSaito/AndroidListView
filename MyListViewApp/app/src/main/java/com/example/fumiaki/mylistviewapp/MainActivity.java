@@ -11,10 +11,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -64,6 +66,25 @@ public class MainActivity extends AppCompatActivity {
 
         // ListViewに表示
         myListView.setAdapter(adapter);
+
+
+        myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(
+                    AdapterView<?> parent,
+                    View view,    // タップされたView
+                    int i,        // 何番目？
+                    long id       // view id
+            ) {
+                TextView name = (TextView) view.findViewById(R.id.name);
+                Toast.makeText(
+                        MainActivity.this,
+                        Integer.toString(i) + ":" + name.getText().toString(),
+                        Toast.LENGTH_SHORT
+                ).show();
+                name.setText("Tapped");
+            }
+        });
     }
 
     public class UserAdapter extends ArrayAdapter<User> {
@@ -79,20 +100,39 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public View getView(int pos, View convertView, ViewGroup parent) {
+
+            ViewHolder holder;
+
             if (convertView == null) {
                 convertView = layoutInflater.inflate(
                         R.layout.list_item,
                         parent,
                         false
                 );
+                holder = new ViewHolder();
+                holder.icon = (ImageView) convertView.findViewById(R.id.icon);
+                holder.name = (TextView) convertView.findViewById(R.id.name);
+                holder.loc  = (TextView) convertView.findViewById(R.id.loc);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
             }
+
+
             User user = (User) getItem(pos);
-            ((ImageView) convertView.findViewById(R.id.icon)).setImageBitmap(user.getIcon());
-            ((TextView) convertView.findViewById(R.id.name)).setText(user.getName());
-            ((TextView) convertView.findViewById(R.id.loc)).setText(user.getLoc());
+
+            holder.icon.setImageBitmap(user.getIcon());
+            holder.name.setText(user.getName());
+            holder.loc.setText(user.getLoc());
 
             return convertView;
         }
+    }
+
+    static class ViewHolder {
+        ImageView icon;
+        TextView name;
+        TextView loc;
+
     }
 
     public class User {
