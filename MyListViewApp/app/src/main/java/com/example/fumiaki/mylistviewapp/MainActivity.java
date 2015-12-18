@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 holder.icon = (ImageView) convertView.findViewById(R.id.icon);
                 holder.name = (TextView) convertView.findViewById(R.id.name);
                 holder.loc  = (TextView) convertView.findViewById(R.id.loc);
+                convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
